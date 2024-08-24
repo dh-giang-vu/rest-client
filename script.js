@@ -13,82 +13,80 @@ const postBtn = document.getElementById('POST-btn');
 const getBtn = document.getElementById('GET-btn');
 
 getBtn.onclick = function () {
-	alert("GET Request Button clicked.");
-	sendGetRequest();
+  alert("GET Request Button clicked.");
+  sendGetRequest();
 }
 
 postBtn.onclick = function () {
-	alert("POST Request Button clicked.");
+  alert("POST Request Button clicked.");
 
-	const time1Data = Object.fromEntries(new FormData(time1));
-	const time2Data = Object.fromEntries(new FormData(time2));
+  const time1Data = Object.fromEntries(new FormData(time1));
+  const time2Data = Object.fromEntries(new FormData(time2));
 
-	const lesson1Data = Object.fromEntries(new FormData(lesson1));
-	const lesson2Data = Object.fromEntries(new FormData(lesson2));
-	const lesson3Data = Object.fromEntries(new FormData(lesson3));
-	const lesson4Data = Object.fromEntries(new FormData(lesson4));
+  const lesson1Data = Object.fromEntries(new FormData(lesson1));
+  const lesson2Data = Object.fromEntries(new FormData(lesson2));
+  const lesson3Data = Object.fromEntries(new FormData(lesson3));
+  const lesson4Data = Object.fromEntries(new FormData(lesson4));
 
-	const requestBody = {
-		"timeslots": [
-			time1Data,
-			time2Data
-		],
-		"rooms": [
-			{
-				"name": rooms.children[0].value
-			},
-			{
-				"name": rooms.children[1].value
-			}
-		],
-		"lessons": [
-			lesson1Data,
-			lesson2Data,
-			lesson3Data,
-			lesson4Data
-		]
-	};
+  const requestBody = {
+    "timeslots": [
+      time1Data,
+      time2Data
+    ],
+    "rooms": [
+      {
+        "name": rooms.children[0].value
+      },
+      {
+        "name": rooms.children[1].value
+      }
+    ],
+    "lessons": [
+      lesson1Data,
+      lesson2Data,
+      lesson3Data,
+      lesson4Data
+    ]
+  };
 
-	sendPostRequest(requestBody);
+  sendPostRequest(requestBody);
 }
 
 async function sendPostRequest(body) {
-	try {
-		const response = await fetch('http://localhost:8080/timetables/solve', {
-			method: 'POST', // Specifies the request method
-			headers: {
-				'Content-Type': 'application/json', // Indicates the content type
-				// Add other headers if needed
-			},
-			body: JSON.stringify(body), // Replace with your actual data
-		});
+  try {
+    const response = await fetch('http://localhost:8080/timetables/solve', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
 
-		// Check if the response status is OK (status code 200-299)
-		if (!response.ok) {
-			throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
-		}
+    // Check if the response status is OK (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
+    }
 
-		// Parse the response data (assuming JSON)
-		const data = await response.json(); // Use response.text() if expecting plain text
-		console.log('Response data:', data);
-		const rp = document.getElementById('rp');
-		rp.textContent = JSON.stringify(data);
+    const data = await response.json();
+    console.log('Response data:', data);
+    const rp = document.getElementById('rp');
+    rp.textContent = JSON.stringify(data);
 
-	} catch (error) {
-		console.error('Error during fetch operation:', error);
-	}
+  } catch (error) {
+    console.error('Error during fetch operation:', error);
+  }
 }
 
 
 async function sendGetRequest() {
-	try {
-		const response = await fetch('http://localhost:8080/hello');
-		const data = await response.text();
-		console.log(data);
-		const rp = document.getElementById('rp');
-		rp.textContent = data;
-	}
-	catch (error) {
-		console.error('Error GET request:', error);
-	}
+  try {
+    const response = await fetch('http://localhost:8080/hello');
+    const data = await response.text();
+    console.log(data);
+    const rp = document.getElementById('rp');
+    rp.textContent = data;
+  }
+  catch (error) {
+    console.error('Error GET request:', error);
+  }
 }
